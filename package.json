@@ -1,0 +1,31 @@
+{
+  "name": "api_facturas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc & node ./dist/main.js",
+    "dev": "ts-node-dev src/main.ts",
+    "preview": "node ./dist/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/mustache": "^4.2.5",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/morgan": "^1.9.9",
+    "afip.ts": "^3.2.0",
+    "dotenv": "^16.3.1",
+    "express": "4.18.2",
+    "morgan": "^1.10.0",
+    "mustache": "^4.2.0"
+  }
+}
