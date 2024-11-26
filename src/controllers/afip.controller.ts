@@ -28,7 +28,8 @@ router.post(
         numero_de_documento,
         importe_gravado
       );
-      console.log(ans)
+      console.log(ans.response)
+      console.log(ans.response.Errors)
       if (ans.response.FeCabResp.Resultado == "R")
         throw new Error("No se pudo facturar");
       res.status(200).send(ans);
