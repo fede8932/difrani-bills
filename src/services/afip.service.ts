@@ -53,11 +53,12 @@ class AfipService {
       //   "importe con iva red:",
       //   redondearDosDecimales(importe_gravado * 1.21)
       // );
-      const lastVoucher =
-        await this.afip.electronicBillingService.getLastVoucher(
-          this.puntoDeVenta,
-          tipo_factura
-        );
+      // const lastVoucher =
+      //   await this.afip.electronicBillingService.getLastVoucher(
+      //     this.puntoDeVenta,
+      //     tipo_factura
+      //   );
+      const lastVoucher: any = await this.tryGetLastVoucherWithRetry(this.puntoDeVenta, tipo_factura, 3);
       const payload = {
         CantReg: 1, // Cantidad de comprobantes a registrar
         PtoVta: this.puntoDeVenta, // Punto de venta
@@ -201,5 +202,21 @@ class AfipService {
       throw err;
     }
   }
+
+
+  async tryGetLastVoucherWithRetry(puntoDeVenta: number, tipoFactura: any, retries = 2) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await this.afip.electronicBillingService.getLastVoucher(puntoDeVenta, tipoFactura);
+    } catch (error: any) {
+      if (error.code === 'ECONNRESET' && i < retries) {
+        console.warn(`Reintentando por ECONNRESET (${i + 1}/${retries})...`);
+        await new Promise((res) => setTimeout(res, 2500)); // espera 1 segundo
+      } else {
+        throw error;
+      }
+    }
+  }
+}
 }
 export default AfipService;
