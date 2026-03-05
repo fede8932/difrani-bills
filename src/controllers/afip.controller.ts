@@ -92,4 +92,18 @@ router.get(
   }
 );
 
+router.get(
+  "/last/:ptovta/:type",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { ptovta, type } = req.params;
+      const lastVoucher = await afipService.getLastVoucher(Number(ptovta), Number(type));
+      res.status(200).send(lastVoucher);
+    } catch (err: any) {
+      console.log(err);
+      res.status(500).end();
+    }
+  }
+);
+
 export default router;

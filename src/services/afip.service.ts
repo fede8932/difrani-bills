@@ -203,20 +203,34 @@ class AfipService {
     }
   }
 
-
-  async tryGetLastVoucherWithRetry(puntoDeVenta: number, tipoFactura: any, retries = 2) {
-  for (let i = 0; i <= retries; i++) {
+  async getLastVoucher(ptoVta: number, tipoComprobante: number) {
     try {
-      return await this.afip.electronicBillingService.getLastVoucher(puntoDeVenta, tipoFactura);
-    } catch (error: any) {
-      if (error.code === 'ECONNRESET' && i < retries) {
-        console.warn(`Reintentando por ECONNRESET (${i + 1}/${retries})...`);
-        await new Promise((res) => setTimeout(res, 2500)); // espera 1 segundo
-      } else {
-        throw error;
-      }
+      const lastVoucher = await this.afip.electronicBillingService.getLastVoucher(
+        ptoVta,
+        tipoComprobante
+      );
+      return lastVoucher;
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
   }
+
+  async tryGetLastVoucherWithRetry(puntoDeVenta: number, tipoFactura: any, retries = 2) {
+    for (let i = 0; i <= retries; i++) {
+      try {
+        return await this.afip.electronicBillingService.getLastVoucher(puntoDeVenta, tipoFactura);
+      } catch (error: any) {
+        if (error.code === 'ECONNRESET' && i < retries) {
+          console.warn(`Reintentando por ECONNRESET (${i + 1}/${retries})...`);
+          await new Promise((res) => setTimeout(res, 2500)); // espera 1 segundo
+        } else {
+          throw error;
+        }
+      }
+    }
+    throw new Error('No se pudo obtener el último comprobante');
+  }
 }
-}
+
 export default AfipService;
